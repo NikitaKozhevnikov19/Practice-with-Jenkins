@@ -47,6 +47,7 @@ tasks.withType(Test).configureEach {
 
 tasks.register("demoqa_test", Test) {
     useJUnitPlatform {
-        includeTags("demoqa")
+        includeTags 'demoqa'
     }
 }
+
