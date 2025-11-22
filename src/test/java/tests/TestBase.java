@@ -13,8 +13,6 @@ import java.util.Map;
 
 public class TestBase {
 
-    protected ModalComponent modalComponent = new ModalComponent();
-
     @BeforeAll
     static void onSettings() {
         Configuration.browserSize = "1920x1080";
@@ -36,12 +34,6 @@ public class TestBase {
 
     @AfterEach
     void addAttachments() {
-        try {
-            modalComponent.checkModalIsOpen();
-        } catch (Exception e) {
-
-        }
-
         Attach.screenshotAs("Last screenshot");
         Attach.pageSource();
         Attach.browserConsoleLogs();
