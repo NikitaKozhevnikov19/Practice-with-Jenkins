@@ -35,19 +35,16 @@ dependencies {
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.9.0')
 }
 
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
+tasks.register("demoqa_test", Test) {
+    description = "Запуск только тестов с тегом demoqa"
+    group = "verification"
+
+    useJUnitPlatform {
+        includeTags 'demoqa'
+    }
 
     testLogging {
         events "started", "skipped", "failed", "standard_out", "standard_error"
         exceptionFormat "short"
     }
 }
-
-
-tasks.register("demoqa_test", Test) {
-    useJUnitPlatform {
-        includeTags 'demoqa'
-    }
-}
-
