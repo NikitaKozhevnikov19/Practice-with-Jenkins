@@ -6,8 +6,7 @@ import pages.components.CalendarComponent;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.*;
 
 public class RegistrationPage {
     private final SelenideElement header = $("h1"),
@@ -17,7 +16,7 @@ public class RegistrationPage {
             genderWrapper = $("#genterWrapper"),
             phoneInput = $("#userNumber"),
             dateOfBirthInput = $("#dateOfBirthInput"),
-            subjectInput =  $("#subjectsInput"),
+            subjectInput = $("#subjectsInput"),
             subjectOption = $("#react-select-2-option-0"),
             uploadPicture = $("#uploadPicture"),
             currentAddress = $("#currentAddress"),
@@ -32,7 +31,6 @@ public class RegistrationPage {
         header.shouldHave(text("Practice Form"));
         return this;
     }
-
 
     public RegistrationPage setFirstName(String value) {
         firstNameInput.setValue(value);
@@ -81,7 +79,6 @@ public class RegistrationPage {
         return this;
     }
 
-
     public RegistrationPage setAddress(String value) {
         currentAddress.setValue(value);
         return this;
@@ -99,8 +96,15 @@ public class RegistrationPage {
         return this;
     }
 
+    public RegistrationPage removeBanners() {
+        executeJavaScript("$('footer').remove();");
+        executeJavaScript("$('#fixedban').remove();");
+        return this;
+    }
+
     public RegistrationPage submitForm() {
-        submitButton.click();
+        removeBanners(); // удаляем баннеры перед кликом
+        submitButton.scrollIntoView(true).shouldBe(visible).click();
         return this;
     }
 
