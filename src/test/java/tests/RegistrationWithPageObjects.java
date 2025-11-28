@@ -37,6 +37,7 @@ public class RegistrationWithPageObjects extends TestBase {
                     .setAddress("Some address")
                     .setState("NCR")
                     .setCity("Delhi")
+                    .removeBanners()
                     .submitForm();
         });
 
