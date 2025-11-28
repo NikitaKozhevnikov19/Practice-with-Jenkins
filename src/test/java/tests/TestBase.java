@@ -14,24 +14,29 @@ public class TestBase {
 
     @BeforeAll
     static void onSettings() {
-        Configuration.browser = System.getProperty("browser", "chrome");
-        Configuration.browserVersion = System.getProperty("browserVersion", "127.0");
-        Configuration.browserSize = System.getProperty("browserSize", "1920x1080");
-        Configuration.remote = System.getProperty(
+        String browser = System.getProperty("browser", "chrome");
+        String browserVersion = System.getProperty("browserVersion", "127.0");
+        String browserSize = System.getProperty("browserSize", "1920x1080");
+        String remoteUrl = System.getProperty(
                 "remote", "https://user1:1234@selenoid.autotests.cloud/wd/hub"
         );
+
+        Configuration.browser = browser;
+        Configuration.browserVersion = browserVersion;
+        Configuration.browserSize = browserSize;
+        Configuration.remote = remoteUrl;
 
         Configuration.baseUrl = "https://demoqa.com";
         Configuration.pageLoadStrategy = "eager";
 
-
         DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability("browserName", browser);
+        capabilities.setCapability("browserVersion", browserVersion);
         capabilities.setCapability("selenoid:options", Map.of(
                 "enableVNC", true,
                 "enableVideo", true
         ));
         Configuration.browserCapabilities = capabilities;
-
 
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide()
                 .screenshots(true)
