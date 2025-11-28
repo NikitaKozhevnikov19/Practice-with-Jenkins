@@ -47,4 +47,5 @@ tasks.register("demoqa_test", Test) {
         events "started", "skipped", "failed", "standard_out", "standard_error"
         exceptionFormat "short"
     }
+    systemProperties(System.getProperties())
 }
