@@ -78,19 +78,9 @@ public class RegistrationPage {
     }
 
     public RegistrationPage setPicture(String fileName) {
-        ClassLoader cl = getClass().getClassLoader();
-        URL resource = cl.getResource("images/" + fileName);
-
-        if (resource == null) {
-            throw new RuntimeException("Файл НЕ найден в resources/images: " + fileName);
-        }
-
-        File file = new File(resource.getPath());
-
-        uploadPicture.uploadFile(file);
+        uploadPicture.uploadFromClasspath("images/" + fileName);
         return this;
     }
-
 
     public RegistrationPage setAddress(String value) {
         currentAddress.setValue(value);
