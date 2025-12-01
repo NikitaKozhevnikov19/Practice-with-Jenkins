@@ -34,7 +34,8 @@ public class TestBase {
         capabilities.setCapability("browserVersion", browserVersion);
         capabilities.setCapability("selenoid:options", Map.of(
                 "enableVNC", true,
-                "enableVideo", true
+                "enableVideo", true,
+                "enableFileUploads", true
         ));
         Configuration.browserCapabilities = capabilities;
 
@@ -47,7 +48,9 @@ public class TestBase {
     void addAttachments() {
         Attach.screenshotAs("Last screenshot");
         Attach.pageSource();
-        Attach.browserConsoleLogs();
+        if (!Configuration.browser.equals("firefox")) {
+            Attach.browserConsoleLogs();
+        }
         Attach.addVideo();
     }
 }
