@@ -6,6 +6,7 @@ import helpers.Attach;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.util.Map;
@@ -14,38 +15,40 @@ public class TestBase {
 
     @BeforeAll
     static void onSettings() {
-        String browser = System.getProperty("browser", "chrome");
-        String browserVersion = System.getProperty("browserVersion", "127.0");
-        String browserSize = System.getProperty("browserSize", "1920x1080");
-        String remoteUrl = System.getProperty(
-                "remote", "https://user1:1234@selenoid.autotests.cloud/wd/hub"
-        );
+        Configuration.browser = System.getProperty("browser", "chrome");
+        Configuration.browserVersion = System.getProperty("browserVersion", "127.0");
+        Configuration.browserSize = System.getProperty("browserSize", "1920x1080");
 
-        Configuration.browser = browser;
-        Configuration.browserVersion = browserVersion;
-        Configuration.browserSize = browserSize;
-        Configuration.remote = remoteUrl;
+        String remoteUrl = System.getProperty("remote");
+        if (remoteUrl != null && !remoteUrl.isEmpty()) {
+            Configuration.remote = remoteUrl;
+        }
 
         Configuration.baseUrl = "https://demoqa.com";
         Configuration.pageLoadStrategy = "eager";
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("browserName", browser);
-        capabilities.setCapability("browserVersion", browserVersion);
+        capabilities.setCapability("browserName", Configuration.browser);
+        capabilities.setCapability("browserVersion", Configuration.browserVersion);
         capabilities.setCapability("selenoid:options", Map.of(
                 "enableVNC", true,
                 "enableVideo", true,
                 "enableFileUploads", true
         ));
         Configuration.browserCapabilities = capabilities;
+    }
 
-        SelenideLogger.addListener("AllureSelenide", new AllureSelenide()
-                .screenshots(true)
-                .savePageSource(false));
+    @BeforeEach
+    void addAllureListener() {
+        SelenideLogger.addListener("AllureSelenide",
+                new AllureSelenide()
+                        .screenshots(true)
+                        .savePageSource(false));
     }
 
     @AfterEach
     void addAttachments() {
+        SelenideLogger.removeListener("AllureSelenide");
         Attach.screenshotAs("Last screenshot");
         Attach.pageSource();
         if (!Configuration.browser.equals("firefox")) {
@@ -53,4 +56,5 @@ public class TestBase {
         }
         Attach.addVideo();
     }
+
 }
